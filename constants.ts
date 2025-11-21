@@ -1,6 +1,14 @@
 
 import { Priority, Swimlane, Task, TaskStatus, TaskType, User, StatusUpdate, Theme } from './types';
 
+// Helper for dynamic dates
+const today = new Date();
+const getDate = (offsetDays: number) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + offsetDays);
+    return d.toISOString().split('T')[0];
+};
+
 export const INITIAL_SWIMLANES: Swimlane[] = [
   { id: 'backlog', name: 'Backlog', order: 0 },
   { id: 'discover', name: 'Discover', order: 1 },
@@ -24,8 +32,8 @@ export const INITIAL_TASKS: Task[] = [
     title: 'Website Redesign',
     description: 'Complete overhaul of the corporate website.',
     assignee: 'Alice Chen',
-    startDate: '2023-10-01',
-    dueDate: '2023-12-31',
+    startDate: getDate(-14), // Started 2 weeks ago
+    dueDate: getDate(45), // Due in ~1.5 months
     priority: Priority.HIGH,
     status: TaskStatus.PLANNING,
     phase: 'backlog',
@@ -34,7 +42,7 @@ export const INITIAL_TASKS: Task[] = [
     isMilestone: true,
     attributes: { Development: true, IXD: true, VXD: true, MXD: false, UXW: true, QA: true },
     comments: [],
-    createdAt: Date.now(),
+    createdAt: Date.now() - 1209600000,
   },
   {
     id: 't2',
@@ -42,8 +50,8 @@ export const INITIAL_TASKS: Task[] = [
     title: 'Homepage Wireframes',
     description: 'Create low-fi wireframes for the new homepage.',
     assignee: 'Bob Smith',
-    startDate: '2023-10-15',
-    dueDate: '2023-11-15',
+    startDate: getDate(0), // Starts Today
+    dueDate: getDate(7), // Due in 1 week
     priority: Priority.MEDIUM,
     status: TaskStatus.NOT_STARTED,
     phase: 'backlog',
@@ -60,8 +68,8 @@ export const INITIAL_TASKS: Task[] = [
     title: 'User Research Interviews',
     description: 'Conduct 5 interviews with key stakeholders.',
     assignee: 'Charlie Kim',
-    startDate: '2023-10-05',
-    dueDate: '2023-10-20',
+    startDate: getDate(-5), // Started 5 days ago
+    dueDate: getDate(2), // Due in 2 days
     priority: Priority.HIGH,
     status: TaskStatus.IN_PROGRESS,
     phase: 'discover',
@@ -71,15 +79,15 @@ export const INITIAL_TASKS: Task[] = [
     comments: [
         { id: 'c1', author: 'Alice Chen', text: 'Make sure to ask about mobile usage.', timestamp: Date.now() - 10000 }
     ],
-    createdAt: Date.now() - 50000,
+    createdAt: Date.now() - 432000000,
   }
 ];
 
 export const INITIAL_STATUS_UPDATES: StatusUpdate[] = [
     {
         id: 's1',
-        title: 'Week 42: Research Phase Complete',
-        date: '2023-10-15',
+        title: 'Sprint Summary',
+        date: getDate(-2),
         author: 'Alice Chen',
         type: 'Weekly',
         content: 'We have successfully concluded the initial stakeholder interviews. Key findings suggest a strong need for mobile optimization. Design phase is scheduled to start next week.'
@@ -87,7 +95,7 @@ export const INITIAL_STATUS_UPDATES: StatusUpdate[] = [
     {
         id: 's2',
         title: 'Tech Stack Selection',
-        date: '2023-10-01',
+        date: getDate(-10),
         author: 'Bob Smith',
         type: 'Ad-hoc',
         content: 'After evaluating React vs Vue, the team has decided to proceed with React for better scalability and component reusability.'

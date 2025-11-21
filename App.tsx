@@ -37,8 +37,8 @@ const App: React.FC = () => {
   const [projectDetails, setProjectDetails] = useState<ProjectDetails>({
       name: "Gemini Kanban",
       description: "A powerful, AI-enhanced Kanban board with swimlanes, epics, dependencies, and team analytics. Designed to streamline workflows and improve team collaboration through visual management.",
-      startDate: "2023-10-01",
-      endDate: "2023-12-31",
+      startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       docs: [
           { title: "Product Requirements Document", url: "#" },
           { title: "Figma Design System", url: "#" },

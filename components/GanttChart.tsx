@@ -43,7 +43,6 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
 
   const projectStart = startOfWeek(minDate);
   const projectEnd = startOfWeek(maxDate);
-  const totalDays = (projectEnd.getTime() - projectStart.getTime()) / (1000 * 60 * 60 * 24);
 
   // Calculate Weeks
   const weeks = [];
@@ -53,7 +52,8 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
       current.setDate(current.getDate() + 7);
   }
 
-  const totalDaysInView = weeks.length * 7;
+  // Total days based on 5-day work week
+  const totalDaysInView = weeks.length * 5;
 
   useEffect(() => {
       const handleResize = () => {
@@ -68,14 +68,38 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
       return () => window.removeEventListener('resize', handleResize);
   }, [isFitToScreen, totalDaysInView]);
 
+  // Helper: Calculate business days difference from project start
+  const getBusinessDaysDiff = (targetTime: number, startTime: number) => {
+      const diffTime = targetTime - startTime;
+      const totalDays = diffTime / (1000 * 60 * 60 * 24);
+      
+      const fullWeeks = Math.floor(totalDays / 7);
+      const remainingDays = totalDays % 7; // Float, 0 (Sun) to ~6.99 (Sat)
+
+      let partial = 0;
+      if (remainingDays < 1) {
+          // Sunday (0.0 - 0.99): visual pos is 0 (start of Mon)
+          partial = 0;
+      } else if (remainingDays >= 6) {
+          // Saturday (6.0 - 6.99): visual pos is 5 (end of Fri)
+          partial = 5;
+      } else {
+          // Mon (1.0) to Fri (5.99)
+          // Shift by -1 so Mon starts at 0
+          partial = remainingDays - 1;
+      }
+      
+      return (fullWeeks * 5) + partial;
+  };
+
   // Scroll to Today on mount
   useEffect(() => {
     if (chartContainerRef.current) {
-        const now = new Date().getTime();
-        const start = projectStart.getTime();
-        const diffDays = (now - start) / (1000 * 60 * 60 * 24);
-        // Using default dayWidth of 30 for initial position calculation
-        const initialTodayPos = diffDays * 30;
+        const now = new Date();
+        now.setHours(12, 0, 0, 0); // Center alignment
+        // Default dayWidth is 30
+        const businessDays = getBusinessDaysDiff(now.getTime(), projectStart.getTime());
+        const initialTodayPos = businessDays * 30;
         
         const containerWidth = chartContainerRef.current.clientWidth;
         chartContainerRef.current.scrollLeft = initialTodayPos - (containerWidth / 2);
@@ -106,13 +130,11 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
       setDayWidth(prev => Math.max(prev - 5, 10));
   };
 
-  const weekWidth = dayWidth * 7;
+  const weekWidth = dayWidth * 5;
   const totalWidth = totalDaysInView * dayWidth;
 
   const getPosition = (date: number) => {
-      const diffTime = date - projectStart.getTime();
-      const diffDays = diffTime / (1000 * 60 * 60 * 24);
-      return diffDays * dayWidth;
+      return getBusinessDaysDiff(date, projectStart.getTime()) * dayWidth;
   }
 
   // Sort tasks
@@ -125,7 +147,10 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
       return startA - startB;
   });
 
-  const todayPos = getPosition(new Date().getTime());
+  const now = new Date();
+  now.setHours(12, 0, 0, 0); // Center alignment
+  const todayPos = getPosition(now.getTime());
+  
   const showDays = dayWidth > 35; // "Above 100% (30px approx)"
   const showTodayLine = dayWidth >= 30; // Show line when 100% or more
   const headerHeight = showDays ? 'h-16' : 'h-12';
@@ -135,7 +160,7 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
        
        {/* Toolbar */}
        <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-           <div className="text-sm font-bold text-gray-600">Timeline View</div>
+           <div className="text-sm font-bold text-gray-600">Timeline View (Workdays)</div>
            <div className="flex items-center gap-2">
                <button 
                 onClick={handleZoomOut}
@@ -200,7 +225,11 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                   >
                       {weeks.map((week, i) => {
                           // Only show week label if width is sufficient
-                          const showLabel = weekWidth > 40; 
+                          const showLabel = weekWidth > 40;
+                          // Calculate Monday date for display since we hide Sunday
+                          const monday = new Date(week);
+                          monday.setDate(monday.getDate() + 1);
+                          
                           return (
                             <div 
                                 key={i} 
@@ -210,15 +239,15 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                                 <div className={`flex items-center justify-center text-xs font-medium text-gray-500 border-b ${showDays ? 'border-gray-200 h-1/2' : 'h-full'}`}>
                                     {showLabel && (
                                         <>
-                                            <span className="font-bold text-gray-700 truncate text-center px-1">{week.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-                                            {weekWidth > 120 && <span className="text-[10px] ml-1">{week.getFullYear()}</span>}
+                                            <span className="font-bold text-gray-700 truncate text-center px-1">{monday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                                            {weekWidth > 120 && <span className="text-[10px] ml-1">{monday.getFullYear()}</span>}
                                         </>
                                     )}
                                 </div>
 
                                 {showDays && (
                                     <div className="flex h-1/2">
-                                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
+                                        {['M', 'T', 'W', 'T', 'F'].map((day, idx) => (
                                             <div key={idx} className="flex-1 flex items-center justify-center text-[10px] text-gray-400 border-r border-gray-100 last:border-0">
                                                 {day}
                                             </div>
@@ -243,8 +272,6 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                                             <div className="flex-1 border-r border-gray-100/50"></div>
                                             <div className="flex-1 border-r border-gray-100/50"></div>
                                             <div className="flex-1 border-r border-gray-100/50"></div>
-                                            <div className="flex-1 border-r border-gray-100/50"></div>
-                                            <div className="flex-1 border-r border-gray-100/50"></div>
                                             <div className="flex-1"></div>
                                        </>
                                    )}
@@ -262,7 +289,8 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                               const validEnd = end > start ? end : start + (1000 * 60 * 60 * 24);
                               
                               const left = getPosition(start);
-                              const width = getPosition(validEnd) - left;
+                              const right = getPosition(validEnd);
+                              const width = right - left;
 
                               const isEpic = task.type === TaskType.EPIC;
                               const colorClass = isEpic 
@@ -288,7 +316,7 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                                       {task.isMilestone && (
                                           <div 
                                             className="absolute top-1.5 z-10"
-                                            style={{ left: getPosition(end) - 9 }} // Center the 18px icon
+                                            style={{ left: right - 9 }} // Center the 18px icon
                                             title="Milestone Due Date"
                                           >
                                               <div className="relative group">
@@ -303,11 +331,17 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                           
                           {/* Today Line Segment */}
                           {showTodayLine && (
-                              <div 
-                                  className="absolute top-0 bottom-0 w-px bg-red-500 z-30 pointer-events-none"
-                                  style={{ left: todayPos }}
-                                  title="Today"
-                              />
+                              <>
+                                  <div 
+                                      className="absolute top-0 bottom-0 w-px bg-red-500 z-30 pointer-events-none"
+                                      style={{ left: todayPos }}
+                                      title="Today"
+                                  />
+                                  <div 
+                                      className="absolute bottom-0 w-2 h-2 bg-red-500 rounded-full z-30 pointer-events-none transform -translate-x-1/2"
+                                      style={{ left: todayPos }}
+                                  />
+                              </>
                           )}
                       </div>
 
