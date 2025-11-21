@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Task, TaskType, TaskStatus } from '../types';
 import { Layers, Diamond, ZoomIn, ZoomOut, Monitor, Search, Plus } from 'lucide-react';
@@ -336,7 +335,7 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick, onAd
                                       {/* Milestone Diamond */}
                                       {task.isMilestone && (
                                           <div 
-                                            className="absolute top-1.5 z-10"
+                                            className="absolute top-3 z-10"
                                             style={{ left: right - 9 }} // Center the 18px icon
                                             title="Milestone Due Date"
                                           >

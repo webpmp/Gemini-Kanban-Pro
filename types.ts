@@ -1,4 +1,5 @@
 
+
 export enum Priority {
   LOW = 'Low',
   MEDIUM = 'Medium',
@@ -94,6 +95,8 @@ export interface StatusUpdate {
   author: string;
   content: string;
   type: 'Daily' | 'Weekly' | 'Monthly' | 'Ad-hoc';
+  projectStatus?: 'On Track' | 'Risks' | 'Blocked';
+  comments?: Comment[];
 }
 
 export type SortOption = 'dueDate' | 'priority' | 'assignee';

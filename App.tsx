@@ -299,6 +299,7 @@ const App: React.FC = () => {
                 update={update}
                 allUpdates={statusUpdates}
                 currentUser={currentUser}
+                users={users}
                 onBack={() => setCurrentView('overview')}
                 onSelectUpdate={handleViewStatusUpdate}
                 onSave={handleUpdateStatusUpdate}

@@ -60,6 +60,15 @@ const getFileIconConfig = (url: string, title: string) => {
     }
 };
 
+const getStatusBadgeColor = (status?: string) => {
+    switch(status) {
+        case 'On Track': return 'bg-green-100 text-green-700 border border-green-200';
+        case 'Risks': return 'bg-yellow-100 text-yellow-700 border border-yellow-200';
+        case 'Blocked': return 'bg-red-100 text-red-700 border border-red-200';
+        default: return 'hidden';
+    }
+};
+
 export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   projectDetails,
   users,
@@ -242,7 +251,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                                             type="date" 
                                             value={editedDetails.startDate}
                                             onChange={(e) => setEditedDetails({...editedDetails, startDate: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-500"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-primary-500"
                                         />
                                     </div>
                                     <div>
@@ -251,7 +260,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                                             type="date" 
                                             value={editedDetails.endDate}
                                             onChange={(e) => setEditedDetails({...editedDetails, endDate: e.target.value})}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary-500"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-primary-500"
                                         />
                                     </div>
                                 </div>
@@ -261,7 +270,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                                         rows={4}
                                         value={editedDetails.description}
                                         onChange={(e) => setEditedDetails({...editedDetails, description: e.target.value})}
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-700 text-sm outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-gray-900 text-sm outline-none focus:ring-2 focus:ring-primary-500 resize-none"
                                     />
                                 </div>
                             </div>
@@ -331,14 +340,14 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                                     placeholder="Link Title (e.g. PRD)"
                                     value={newLinkTitle}
                                     onChange={(e) => setNewLinkTitle(e.target.value)}
-                                    className="w-full text-xs p-2 bg-gray-50 border border-gray-200 rounded outline-none focus:border-primary-500"
+                                    className="w-full text-xs p-2 bg-gray-50 border border-gray-200 rounded outline-none focus:border-primary-500 text-gray-900"
                                  />
                                  <div className="flex gap-2">
                                      <input 
                                         placeholder="https://... (ends in .pdf, .docx, etc for icons)"
                                         value={newLinkUrl}
                                         onChange={(e) => setNewLinkUrl(e.target.value)}
-                                        className="flex-1 text-xs p-2 bg-gray-50 border border-gray-200 rounded outline-none focus:border-primary-500"
+                                        className="flex-1 text-xs p-2 bg-gray-50 border border-gray-200 rounded outline-none focus:border-primary-500 text-gray-900"
                                      />
                                      <button 
                                         onClick={handleAddLink}
@@ -420,7 +429,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                         {sortedUpdates.slice(0, 5).map(update => (
                             <div key={update.id} className="p-4 hover:bg-gray-50 transition-colors group">
                                 <div className="flex justify-between items-start mb-2 cursor-pointer" onClick={() => toggleUpdate(update.id)}>
-                                    <div>
+                                    <div className="pr-2">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className={`w-2 h-2 rounded-full ${
                                                 update.type === 'Weekly' ? 'bg-primary-500' :
@@ -433,19 +442,26 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
                                             {update.title}
                                         </h4>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        {isAdmin && (
-                                            <button 
-                                                onClick={(e) => handleDeleteStatus(e, update.id)}
-                                                className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all"
-                                                title="Delete Update"
-                                            >
-                                                <Trash2 className="w-3 h-3" />
-                                            </button>
+                                    <div className="flex flex-col items-end gap-2">
+                                        {update.projectStatus && (
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${getStatusBadgeColor(update.projectStatus)}`}>
+                                                {update.projectStatus}
+                                            </span>
                                         )}
-                                        <button className="text-gray-300 hover:text-gray-500">
-                                            {expandedUpdateId === update.id ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                                        </button>
+                                        <div className="flex items-center gap-2">
+                                            {isAdmin && (
+                                                <button 
+                                                    onClick={(e) => handleDeleteStatus(e, update.id)}
+                                                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all"
+                                                    title="Delete Update"
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </button>
+                                            )}
+                                            <button className="text-gray-300 hover:text-gray-500">
+                                                {expandedUpdateId === update.id ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 

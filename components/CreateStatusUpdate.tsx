@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { StatusUpdate, User } from '../types';
 import { ArrowLeft, Check, Info, Lightbulb, Calendar } from 'lucide-react';
@@ -13,6 +14,7 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
   const [title, setTitle] = useState('');
   const [type, setType] = useState<StatusUpdate['type']>('Weekly');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [projectStatus, setProjectStatus] = useState<StatusUpdate['projectStatus']>('On Track');
   const [content, setContent] = useState('');
 
   const handleSubmit = () => {
@@ -23,8 +25,10 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
       title,
       date,
       type,
+      projectStatus,
       content,
       author: currentUser.name,
+      comments: []
     };
 
     onSave(newUpdate);
@@ -52,7 +56,7 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
                   placeholder="e.g. Week 4 Sprint Summary"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none font-medium"
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none font-medium text-gray-900"
                   autoFocus
                 />
               </div>
@@ -62,7 +66,7 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
                  <select
                     value={type}
                     onChange={(e) => setType(e.target.value as StatusUpdate['type'])}
-                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900"
                  >
                     <option value="Daily">Daily Standup</option>
                     <option value="Weekly">Weekly Report</option>
@@ -72,16 +76,30 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
               </div>
             </div>
 
-            <div className="mb-6">
-               <label className="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-wider">Date</label>
-               <div className="relative">
-                   <Calendar className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
-                   <input
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      className="w-full pl-10 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
-                   />
+            <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div>
+                 <label className="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-wider">Date</label>
+                 <div className="relative">
+                     <Calendar className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
+                     <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full pl-10 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900"
+                     />
+                 </div>
+               </div>
+               <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-wider">Project Health</label>
+                  <select
+                    value={projectStatus}
+                    onChange={(e) => setProjectStatus(e.target.value as any)}
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900"
+                  >
+                    <option value="On Track">On Track</option>
+                    <option value="Risks">Risks</option>
+                    <option value="Blocked">Blocked</option>
+                  </select>
                </div>
             </div>
 
@@ -92,7 +110,7 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
                 placeholder="What did the team achieve? What's blocked? What's next?"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm leading-relaxed focus:ring-2 focus:ring-primary-500 outline-none resize-none"
+                className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm leading-relaxed focus:ring-2 focus:ring-primary-500 outline-none resize-none text-gray-900"
               />
             </div>
 
@@ -147,13 +165,23 @@ export const CreateStatusUpdate: React.FC<CreateStatusUpdateProps> = ({ currentU
                  <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-primary-200 text-primary-700 flex items-center justify-center text-xs font-bold flex-shrink-0">3</div>
                     <div>
+                       <h4 className="text-sm font-bold text-primary-900 mb-1">Path to Green</h4>
+                       <p className="text-xs text-primary-800/80 leading-relaxed">
+                          If you have any risks or blockers, include a Path to Green which details what is planned to resolve the risk or blocker.
+                       </p>
+                    </div>
+                 </div>
+                 
+                 <div className="flex gap-3">
+                    <div className="w-6 h-6 rounded-full bg-primary-200 text-primary-700 flex items-center justify-center text-xs font-bold flex-shrink-0">4</div>
+                    <div>
                        <h4 className="text-sm font-bold text-primary-900 mb-1">Next Steps</h4>
                        <p className="text-xs text-primary-800/80 leading-relaxed">
                           Briefly outline the primary focus for the upcoming period.
                        </p>
                     </div>
                  </div>
-                 
+
                  <div className="mt-4 pt-4 border-t border-primary-200">
                     <div className="flex items-start gap-2 p-3 bg-white/60 rounded-lg">
                        <Info className="w-4 h-4 text-primary-500 mt-0.5" />

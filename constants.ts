@@ -1,4 +1,5 @@
 
+
 import { Priority, Swimlane, Task, TaskStatus, TaskType, User, StatusUpdate, Theme } from './types';
 
 // Helper for dynamic dates
@@ -19,7 +20,7 @@ export const INITIAL_SWIMLANES: Swimlane[] = [
 ];
 
 export const MOCK_USERS: User[] = [
-  { id: 'u1', name: 'Alice Chen', alias: 'alice@company.com', jobTitle: 'Product Manager', avatarUrl: 'https://picsum.photos/32/32?random=1', role: 'Admin' },
+  { id: 'u1', name: 'Alice Chen', alias: 'alice@company.com', jobTitle: 'Program Manager', avatarUrl: 'https://picsum.photos/32/32?random=1', role: 'Admin' },
   { id: 'u2', name: 'Bob Smith', alias: 'bob@company.com', jobTitle: 'Lead Developer', avatarUrl: 'https://picsum.photos/32/32?random=2', role: 'Member' },
   { id: 'u3', name: 'Charlie Kim', alias: 'charlie@company.com', jobTitle: 'UX Researcher', avatarUrl: 'https://picsum.photos/32/32?random=3', role: 'Member' },
   { id: 'u4', name: 'Diana Prince', alias: 'diana@company.com', jobTitle: 'Stakeholder', avatarUrl: 'https://picsum.photos/32/32?random=4', role: 'Viewer' },
@@ -90,7 +91,9 @@ export const INITIAL_STATUS_UPDATES: StatusUpdate[] = [
         date: getDate(-2),
         author: 'Alice Chen',
         type: 'Weekly',
-        content: 'We have successfully concluded the initial stakeholder interviews. Key findings suggest a strong need for mobile optimization. Design phase is scheduled to start next week.'
+        content: 'We have successfully concluded the initial stakeholder interviews. Key findings suggest a strong need for mobile optimization. Design phase is scheduled to start next week.',
+        projectStatus: 'On Track',
+        comments: []
     },
     {
         id: 's2',
@@ -98,7 +101,9 @@ export const INITIAL_STATUS_UPDATES: StatusUpdate[] = [
         date: getDate(-10),
         author: 'Bob Smith',
         type: 'Ad-hoc',
-        content: 'After evaluating React vs Vue, the team has decided to proceed with React for better scalability and component reusability.'
+        content: 'After evaluating React vs Vue, the team has decided to proceed with React for better scalability and component reusability.',
+        projectStatus: 'On Track',
+        comments: []
     }
 ];
 

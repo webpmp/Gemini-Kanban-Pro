@@ -212,7 +212,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                       placeholder="e.g. Sarah Connor"
                       value={newUser.name}
                       onChange={(e) => setNewUser({...newUser, name: e.target.value})}
-                      className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                      className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900"
                     />
                   </div>
                   <div className="space-y-1">
@@ -225,7 +225,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                           setNewUser({...newUser, email: e.target.value});
                           if (emailError) setEmailError('');
                       }}
-                      className={`w-full p-2.5 bg-gray-50 border ${emailError ? 'border-red-500' : 'border-gray-200'} rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none`}
+                      className={`w-full p-2.5 bg-gray-50 border ${emailError ? 'border-red-500' : 'border-gray-200'} rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900`}
                     />
                     {emailError && <span className="text-xs text-red-500">{emailError}</span>}
                   </div>
@@ -236,7 +236,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                       placeholder="e.g. Frontend Dev"
                       value={newUser.jobTitle}
                       onChange={(e) => setNewUser({...newUser, jobTitle: e.target.value})}
-                      className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                      className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900"
                     />
                   </div>
                   <div className="space-y-1">
@@ -244,7 +244,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                     <select
                       value={newUser.role}
                       onChange={(e) => setNewUser({...newUser, role: e.target.value as UserRole})}
-                      className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                      className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none text-gray-900"
                     >
                       <option value="Admin">Admin</option>
                       <option value="Member">Member</option>
@@ -275,7 +275,7 @@ export const TeamManagement: React.FC<TeamManagementProps> = ({
                 placeholder="Search members..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none w-64"
+                className="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none w-64 text-gray-900"
               />
             </div>
           </div>
