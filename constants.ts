@@ -1,5 +1,4 @@
 
-
 import { Priority, Swimlane, Task, TaskStatus, TaskType, User, StatusUpdate, Theme } from './types';
 
 // Helper for dynamic dates
@@ -20,7 +19,7 @@ export const INITIAL_SWIMLANES: Swimlane[] = [
 ];
 
 export const MOCK_USERS: User[] = [
-  { id: 'u1', name: 'Alice Chen', alias: 'alice@company.com', jobTitle: 'Program Manager', avatarUrl: 'https://picsum.photos/32/32?random=1', role: 'Admin' },
+  { id: 'u1', name: 'Chris Adkins', alias: 'chris@company.com', jobTitle: 'Program Manager', avatarUrl: 'https://picsum.photos/32/32?random=1', role: 'Admin' },
   { id: 'u2', name: 'Bob Smith', alias: 'bob@company.com', jobTitle: 'Lead Developer', avatarUrl: 'https://picsum.photos/32/32?random=2', role: 'Member' },
   { id: 'u3', name: 'Charlie Kim', alias: 'charlie@company.com', jobTitle: 'UX Researcher', avatarUrl: 'https://picsum.photos/32/32?random=3', role: 'Member' },
   { id: 'u4', name: 'Diana Prince', alias: 'diana@company.com', jobTitle: 'Stakeholder', avatarUrl: 'https://picsum.photos/32/32?random=4', role: 'Viewer' },
@@ -32,7 +31,7 @@ export const INITIAL_TASKS: Task[] = [
     type: TaskType.EPIC,
     title: 'Website Redesign',
     description: 'Complete overhaul of the corporate website.',
-    assignee: 'Alice Chen',
+    assignee: 'Chris Adkins',
     startDate: getDate(-14), // Started 2 weeks ago
     dueDate: getDate(45), // Due in ~1.5 months
     priority: Priority.HIGH,
@@ -78,7 +77,7 @@ export const INITIAL_TASKS: Task[] = [
     isMilestone: false,
     attributes: { Development: false, IXD: false, VXD: false, MXD: false, UXW: true, QA: false },
     comments: [
-        { id: 'c1', author: 'Alice Chen', text: 'Make sure to ask about mobile usage.', timestamp: Date.now() - 10000 }
+        { id: 'c1', author: 'Chris Adkins', text: 'Make sure to ask about mobile usage.', timestamp: Date.now() - 10000 }
     ],
     createdAt: Date.now() - 432000000,
   }
@@ -89,7 +88,7 @@ export const INITIAL_STATUS_UPDATES: StatusUpdate[] = [
         id: 's1',
         title: 'Sprint Summary',
         date: getDate(-2),
-        author: 'Alice Chen',
+        author: 'Chris Adkins',
         type: 'Weekly',
         content: 'We have successfully concluded the initial stakeholder interviews. Key findings suggest a strong need for mobile optimization. Design phase is scheduled to start next week.',
         projectStatus: 'On Track',
