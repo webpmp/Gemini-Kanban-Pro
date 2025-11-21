@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Task, TaskType, TaskStatus } from '../types';
 import { Layers, Diamond, ZoomIn, ZoomOut, Monitor, Search, Plus } from 'lucide-react';
@@ -6,9 +7,10 @@ interface GanttChartProps {
   tasks: Task[];
   onTaskClick: (task: Task) => void;
   onAddTask: () => void;
+  highlightFilter?: { mode: 'type' | 'status', value: string } | null;
 }
 
-export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick, onAddTask }) => {
+export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick, onAddTask, highlightFilter }) => {
   const [dayWidth, setDayWidth] = useState(40);
   const [isFitToScreen, setIsFitToScreen] = useState(false);
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -198,17 +200,23 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick, onAd
                   Task Name
               </div>
               <div className="overflow-y-auto scrollbar-hide flex-1 pb-10">
-                  {sortedTasks.map(task => (
-                      <div 
-                        key={task.id} 
-                        onClick={() => onTaskClick(task)}
-                        className="h-10 px-4 flex items-center border-b border-gray-50 hover:bg-primary-50 cursor-pointer group transition-colors"
-                      >
-                          <span className={`truncate text-sm font-medium ${task.type === TaskType.EPIC ? 'text-secondary-700 font-bold' : 'text-gray-700'} group-hover:text-primary-700`}>
-                              {task.title || 'Untitled'}
-                          </span>
-                      </div>
-                  ))}
+                  {sortedTasks.map(task => {
+                      const isDimmed = highlightFilter && (
+                          highlightFilter.mode === 'type' ? task.type !== highlightFilter.value :
+                          highlightFilter.mode === 'status' ? task.status !== highlightFilter.value : false
+                      );
+                      return (
+                          <div 
+                            key={task.id} 
+                            onClick={() => onTaskClick(task)}
+                            className={`h-10 px-4 flex items-center border-b border-gray-50 hover:bg-primary-50 cursor-pointer group transition-all duration-500 ${isDimmed ? 'opacity-10 grayscale' : 'opacity-100'}`}
+                          >
+                              <span className={`truncate text-sm font-medium ${task.type === TaskType.EPIC ? 'text-secondary-700 font-bold' : 'text-gray-700'} group-hover:text-primary-700`}>
+                                  {task.title || 'Untitled'}
+                              </span>
+                          </div>
+                      );
+                  })}
                   
                   {/* Add Task Button */}
                   <button 
@@ -318,9 +326,14 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick, onAd
                                 : task.status === TaskStatus.COMPLETE 
                                     ? 'bg-green-500 border-green-600' 
                                     : 'bg-primary-500 border-primary-600 shadow-sm shadow-primary-200';
+                              
+                              const isDimmed = highlightFilter && (
+                                  highlightFilter.mode === 'type' ? task.type !== highlightFilter.value :
+                                  highlightFilter.mode === 'status' ? task.status !== highlightFilter.value : false
+                              );
 
                               return (
-                                  <div key={task.id} className="relative h-10 w-full border-b border-transparent hover:bg-gray-100/50 transition-colors">
+                                  <div key={task.id} className={`relative h-10 w-full border-b border-transparent hover:bg-gray-100/50 transition-all duration-500 ${isDimmed ? 'opacity-10 grayscale' : 'opacity-100'}`}>
                                       
                                       {/* The Bar */}
                                       <div 

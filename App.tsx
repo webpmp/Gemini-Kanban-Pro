@@ -47,7 +47,7 @@ const App: React.FC = () => {
   });
   
   // Highlight Logic
-  const [highlightType, setHighlightType] = useState<TaskType | null>(null);
+  const [highlightCriteria, setHighlightCriteria] = useState<{ mode: 'type' | 'status', value: string } | null>(null);
   const highlightTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // For editing swimlane names
@@ -158,13 +158,13 @@ const App: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleHighlight = (type: TaskType) => {
+  const handleHighlight = (criteria: { mode: 'type' | 'status', value: string }) => {
       if (highlightTimeoutRef.current) {
           clearTimeout(highlightTimeoutRef.current);
       }
-      setHighlightType(type);
+      setHighlightCriteria(criteria);
       highlightTimeoutRef.current = setTimeout(() => {
-          setHighlightType(null);
+          setHighlightCriteria(null);
       }, 5000);
   };
 
@@ -347,6 +347,7 @@ const App: React.FC = () => {
                   tasks={tasks} 
                   onTaskClick={handleTaskClick} 
                   onAddTask={openNewTaskModal}
+                  highlightFilter={highlightCriteria}
                 />
             </div>
         )
@@ -461,7 +462,13 @@ const App: React.FC = () => {
                           task={task} 
                           users={users} 
                           onClick={handleTaskClick} 
-                          isDimmed={highlightType !== null && task.type !== highlightType}
+                          isDimmed={
+                            highlightCriteria !== null && (
+                              highlightCriteria.mode === 'type' 
+                                ? task.type !== highlightCriteria.value 
+                                : task.status !== highlightCriteria.value
+                            )
+                          }
                       />
                    ))}
                    {getSortedTasks(lane.id).length === 0 && (

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Task, TaskType, Priority, TaskStatus, User } from '../types';
 import { PRIORITY_ORDER } from '../constants';
 import { enhanceTaskDescription, generateSubtasks } from '../services/geminiService';
-import { X, Sparkles, Plus, Trash2, CheckSquare, User as UserIcon, Loader2, Layers, Link as LinkIcon, ExternalLink, Flag } from 'lucide-react';
+import { X, Sparkles, Plus, Trash2, CheckSquare, User as UserIcon, Loader2, Layers, Link as LinkIcon, ExternalLink, Flag, FileText } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
 
 interface TaskModalProps {
@@ -34,6 +34,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   // Link Inputs
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
+
+  // Deliverable Inputs
+  const [delTitle, setDelTitle] = useState('');
+  const [delUrl, setDelUrl] = useState('');
 
   // Confirmation Modal State
   const [confirmConfig, setConfirmConfig] = useState<{
@@ -67,8 +71,14 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     if (isOpen) {
       setLinkTitle('');
       setLinkUrl('');
+      setDelTitle('');
+      setDelUrl('');
       if (task) {
-        setEditedTask({ ...task, projectLinks: task.projectLinks || [] });
+        setEditedTask({ 
+            ...task, 
+            projectLinks: task.projectLinks || [],
+            deliverables: task.deliverables || []
+        });
       } else {
         // Default new task
         const today = new Date().toISOString().split('T')[0];
@@ -87,6 +97,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
           subTaskIds: [],
           dependencies: [],
           projectLinks: [],
+          deliverables: [],
           isMilestone: false,
           attributes: {
             Development: false,
@@ -162,6 +173,34 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             setEditedTask(prev => prev ? {
                 ...prev,
                 projectLinks: (prev.projectLinks || []).filter((_, i) => i !== index)
+            } : null);
+        }
+      );
+  };
+
+  const handleAddDeliverable = () => {
+      if (!delUrl.trim() || !editedTask) return;
+      const newLink = {
+          title: delTitle.trim() || new URL(delUrl).hostname,
+          url: delUrl.trim()
+      };
+      setEditedTask(prev => prev ? {
+          ...prev,
+          deliverables: [...(prev.deliverables || []), newLink]
+      } : null);
+      setDelTitle('');
+      setDelUrl('');
+  };
+
+  const handleRemoveDeliverable = (index: number) => {
+      if (!editedTask) return;
+      openConfirm(
+        'Remove Deliverable',
+        'Are you sure you want to remove this deliverable?',
+        () => {
+            setEditedTask(prev => prev ? {
+                ...prev,
+                deliverables: (prev.deliverables || []).filter((_, i) => i !== index)
             } : null);
         }
       );
@@ -553,6 +592,70 @@ export const TaskModal: React.FC<TaskModalProps> = ({
 
           </div>
 
+          {/* Deliverables Section */}
+          <div className="pt-6 mt-2 border-t border-slate-800">
+             <label className="block text-xs font-bold text-slate-400 uppercase mb-3 tracking-wider">Deliverables</label>
+             
+             <div className="space-y-2 mb-3">
+                 {editedTask.deliverables?.map((link, idx) => (
+                     <div key={idx} className="group flex items-center gap-3 bg-slate-800 p-3 rounded border border-slate-700 hover:border-slate-600 transition-colors">
+                         <div className="p-2 bg-slate-700/50 rounded text-primary-400">
+                             <FileText className="w-4 h-4" />
+                         </div>
+                         <div className="flex-1 min-w-0">
+                             <div className="text-sm font-bold text-slate-200 truncate">{link.title}</div>
+                             <a 
+                                href={link.url} 
+                                target="_blank" 
+                                rel="noreferrer"
+                                className="text-xs text-primary-400 hover:text-primary-300 hover:underline truncate block"
+                             >
+                                 {link.url}
+                             </a>
+                         </div>
+                         <button 
+                            onClick={() => handleRemoveDeliverable(idx)}
+                            className="p-2 text-slate-500 hover:text-red-400 hover:bg-slate-700 rounded transition-all opacity-0 group-hover:opacity-100"
+                         >
+                             <X className="w-4 h-4" />
+                         </button>
+                     </div>
+                 ))}
+                 {(!editedTask.deliverables || editedTask.deliverables.length === 0) && (
+                     <div className="text-sm text-slate-500 italic px-2 border border-dashed border-slate-700/50 rounded p-3 text-center">
+                         No deliverables added.
+                     </div>
+                 )}
+             </div>
+
+             <div className="flex gap-2 items-center">
+                 <div className="flex-1 flex gap-2">
+                    <input 
+                        type="text"
+                        placeholder="File Name"
+                        value={delTitle}
+                        onChange={(e) => setDelTitle(e.target.value)}
+                        className="w-1/3 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm outline-none focus:ring-1 focus:ring-primary-500 text-white placeholder-slate-500"
+                    />
+                    <input 
+                        type="url"
+                        placeholder="URL (Drive, Dropbox, Figma...)"
+                        value={delUrl}
+                        onChange={(e) => setDelUrl(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddDeliverable()}
+                        className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm outline-none focus:ring-1 focus:ring-primary-500 text-white placeholder-slate-500"
+                    />
+                 </div>
+                 <button 
+                    onClick={handleAddDeliverable}
+                    disabled={!delUrl}
+                    className="p-2 bg-slate-700 hover:bg-primary-600 disabled:hover:bg-slate-700 disabled:opacity-50 text-white rounded-lg border border-slate-600 transition-colors"
+                 >
+                     <Plus className="w-5 h-5" />
+                 </button>
+             </div>
+          </div>
+
           {/* Comments Section */}
           <div className="pt-6 border-t border-slate-800">
              <label className="block text-xs font-bold text-slate-400 uppercase mb-3 tracking-wider">Discussion</label>
@@ -561,7 +664,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                      <div key={c.id} className="bg-slate-800 p-3 rounded-lg text-sm border border-slate-700">
                          <div className="flex justify-between mb-1">
                              <span className="font-bold text-slate-200">{c.author}</span>
-                             <span className="text-xs text-slate-500">{new Date(c.timestamp).toLocaleString()}</span>
+                             <span className="text-xs text-slate-500">{new Date(c.timestamp).toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                          </div>
                          <p className="text-slate-300 leading-relaxed">{c.text}</p>
                      </div>
@@ -612,7 +715,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
              </button>
              <button 
                 onClick={() => onSave(editedTask)}
-                className="px-6 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg font-bold text-sm shadow-lg shadow-primary-900/30 transition-all flex items-center gap-2"
+                className="px-6 py-2 bg-primary-600 hover:bg-primary-50 text-white rounded-lg font-bold text-sm shadow-lg shadow-primary-900/30 transition-all flex items-center gap-2"
              >
                 <CheckSquare className="w-4 h-4" />
                 {task ? 'Save Changes' : 'Post Task'}

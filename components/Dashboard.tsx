@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { Task, User, TaskType } from '../types';
+import { Task, User, TaskType, TaskStatus } from '../types';
 import { THEMES } from '../constants';
 import { BarChart3, CheckCircle, Upload, Camera, X, ChevronDown, LogOut, LayoutList, Kanban, Palette, CheckCircle2 } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
@@ -12,7 +12,7 @@ interface DashboardProps {
     projectImage: string;
     currentTheme?: string;
     onUpdateProjectImage: (url: string) => void;
-    onHighlight: (type: TaskType) => void;
+    onHighlight: (criteria: { mode: 'type' | 'status', value: string }) => void;
     onProjectClick: () => void;
     currentViewMode?: 'kanban' | 'gantt' | 'overview';
     onViewModeChange?: (mode: 'kanban' | 'gantt' | 'overview') => void;
@@ -145,7 +145,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="flex-1 w-full overflow-x-auto flex gap-6 items-center justify-start md:justify-center px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
                 
                 <div 
-                    onClick={() => onHighlight(TaskType.EPIC)}
+                    onClick={() => onHighlight({ mode: 'type', value: TaskType.EPIC })}
                     className="flex flex-col items-center min-w-[80px] cursor-pointer hover:bg-gray-50 rounded-lg py-1 transition-colors group"
                     title="Click to highlight Epics"
                 >
@@ -155,7 +155,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div className="h-8 w-px bg-gray-200"></div>
 
                 <div 
-                    onClick={() => onHighlight(TaskType.TASK)}
+                    onClick={() => onHighlight({ mode: 'type', value: TaskType.TASK })}
                     className="flex flex-col items-center min-w-[80px] cursor-pointer hover:bg-gray-50 rounded-lg py-1 transition-colors group"
                     title="Click to highlight Tasks"
                 >
@@ -164,9 +164,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
                 <div className="h-8 w-px bg-gray-200"></div>
 
-                <div className="flex flex-col items-center min-w-[80px]">
-                    <span className="text-2xl font-bold text-green-600">{progress}%</span>
-                    <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Done</span>
+                <div 
+                    onClick={() => onHighlight({ mode: 'status', value: TaskStatus.COMPLETE })}
+                    className="flex flex-col items-center min-w-[80px] cursor-pointer hover:bg-gray-50 rounded-lg py-1 transition-colors group"
+                    title="Click to highlight Completed Items"
+                >
+                    <span className="text-2xl font-bold text-green-600 group-hover:scale-110 transition-transform">{progress}%</span>
+                    <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider group-hover:text-green-600">Complete</span>
                 </div>
             </div>
             

@@ -52,6 +52,7 @@ export interface Task {
   parentEpicId?: string; // For Tasks linked to Epics
   dependencies?: string[]; // IDs of tasks this depends on
   projectLinks?: ProjectLink[];
+  deliverables?: ProjectLink[];
   isMilestone?: boolean;
   attributes: {
     Development: boolean;

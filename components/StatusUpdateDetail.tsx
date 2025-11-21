@@ -329,7 +329,7 @@ export const StatusUpdateDetail: React.FC<StatusUpdateDetailProps> = ({ update, 
                                                         <div className="flex justify-between items-center mb-1">
                                                             <span className="font-bold text-sm text-gray-900">{comment.author}</span>
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-xs text-gray-500">{new Date(comment.timestamp).toLocaleString()}</span>
+                                                                <span className="text-xs text-gray-500">{new Date(comment.timestamp).toLocaleString(undefined, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                                                                 {canManageComment && !isEditingThis && (
                                                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                         <button 
