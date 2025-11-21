@@ -1,14 +1,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Task, TaskType, TaskStatus } from '../types';
-import { Layers, Diamond, ZoomIn, ZoomOut, Monitor, Search } from 'lucide-react';
+import { Layers, Diamond, ZoomIn, ZoomOut, Monitor, Search, Plus } from 'lucide-react';
 
 interface GanttChartProps {
   tasks: Task[];
   onTaskClick: (task: Task) => void;
+  onAddTask: () => void;
 }
 
-export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) => {
+export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick, onAddTask }) => {
   const [dayWidth, setDayWidth] = useState(40);
   const [isFitToScreen, setIsFitToScreen] = useState(false);
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -160,7 +161,7 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
        
        {/* Toolbar */}
        <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
-           <div className="text-sm font-bold text-gray-600">Timeline View (Workdays)</div>
+           <div className="text-sm font-bold text-gray-600">Timeline View</div>
            <div className="flex items-center gap-2">
                <button 
                 onClick={handleZoomOut}
@@ -209,6 +210,15 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
                           </span>
                       </div>
                   ))}
+                  
+                  {/* Add Task Button */}
+                  <button 
+                      onClick={onAddTask}
+                      className="w-full h-10 px-4 flex items-center gap-2 text-sm text-gray-400 hover:text-primary-600 hover:bg-gray-50 border-b border-dashed border-gray-200 transition-colors font-medium group"
+                  >
+                      <Plus className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      Add Task
+                  </button>
               </div>
           </div>
 
@@ -247,11 +257,22 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
 
                                 {showDays && (
                                     <div className="flex h-1/2">
-                                        {['M', 'T', 'W', 'T', 'F'].map((day, idx) => (
-                                            <div key={idx} className="flex-1 flex items-center justify-center text-[10px] text-gray-400 border-r border-gray-100 last:border-0">
-                                                {day}
-                                            </div>
-                                        ))}
+                                        {['M', 'T', 'W', 'T', 'F'].map((day, idx) => {
+                                            const dayDate = new Date(week);
+                                            // week starts on Sunday. Monday is +1, Friday is +5
+                                            dayDate.setDate(dayDate.getDate() + idx + 1);
+                                            const dateTooltip = dayDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
+
+                                            return (
+                                                <div 
+                                                    key={idx} 
+                                                    className="flex-1 flex items-center justify-center text-[10px] text-gray-400 border-r border-gray-100 last:border-0 hover:bg-gray-100 hover:text-gray-900 cursor-help transition-colors"
+                                                    title={dateTooltip}
+                                                >
+                                                    {day}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>
@@ -351,4 +372,4 @@ export const GanttChart: React.FC<GanttChartProps> = ({ tasks, onTaskClick }) =>
        </div>
     </div>
   );
-};
+}

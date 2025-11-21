@@ -342,7 +342,11 @@ const App: React.FC = () => {
                     onViewModeChange={handleViewModeChange}
                     onThemeChange={setCurrentTheme}
                 />
-                <GanttChart tasks={tasks} onTaskClick={handleTaskClick} />
+                <GanttChart 
+                  tasks={tasks} 
+                  onTaskClick={handleTaskClick} 
+                  onAddTask={openNewTaskModal}
+                />
             </div>
         )
     }
