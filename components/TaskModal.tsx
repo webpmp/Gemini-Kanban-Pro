@@ -271,9 +271,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({
 
   const handleDeleteTask = () => {
       if (task) {
+          const itemType = task.type === TaskType.EPIC ? 'Epic' : 'Task';
           openConfirm(
-              'Delete Task',
-              'Are you sure you want to delete this task? This action cannot be undone.',
+              `Delete ${itemType}`,
+              `Are you sure you want to delete the ${itemType.toLowerCase()} "${task.title}"? This action cannot be undone.`,
               () => onDelete(task.id)
           );
       }

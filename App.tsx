@@ -92,7 +92,9 @@ const App: React.FC = () => {
   };
 
   const handleConfirmAction = () => {
-      confirmConfig.onConfirm();
+      if (confirmConfig.onConfirm) {
+          confirmConfig.onConfirm();
+      }
       setConfirmConfig(prev => ({ ...prev, isOpen: false }));
   };
 
@@ -220,16 +222,21 @@ const App: React.FC = () => {
   };
 
   const handleDeleteLane = (laneId: string) => {
+      const lane = swimlanes.find(l => l.id === laneId);
+      const laneName = lane ? lane.name : 'Unknown';
       const laneTasks = tasks.filter(t => t.phase === laneId);
+      
       if (laneTasks.length > 0) {
-          alert(`Cannot delete swimlane "${swimlanes.find(l => l.id === laneId)?.name}".\n\nIt contains ${laneTasks.length} tasks. Please move or delete them first.`);
+          alert(`Cannot delete swimlane "${laneName}".\n\nIt contains ${laneTasks.length} tasks. Please move or delete them first.`);
           return;
       }
       
       openConfirm(
           'Delete Swimlane',
-          'Are you sure you want to delete this swimlane? This action cannot be undone.',
-          () => setSwimlanes(prev => prev.filter(l => l.id !== laneId))
+          `Are you sure you want to delete the swimlane "${laneName}"? This action cannot be undone.`,
+          () => {
+             setSwimlanes(prev => prev.filter(l => l.id !== laneId));
+          }
       );
   };
 
@@ -480,6 +487,7 @@ const App: React.FC = () => {
                                    e.stopPropagation();
                                    handleDeleteLane(lane.id);
                                }}
+                               onMouseDown={(e) => e.stopPropagation()}
                                className="ml-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-100 rounded-md transition-all opacity-0 group-hover/lane:opacity-100"
                                title="Delete Swimlane"
                            >
