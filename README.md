@@ -1,6 +1,6 @@
 <img src="https://github.com/webpmp/webpmp.github.io/blob/master/Gemini_Kanban_1980s_Ad.png" alt="Gemini Kanban" style="max-width: 90%;">
 
-# Gemini Kanban Pro
+# Gemini Kanban
 
 A powerful, AI-enhanced Kanban board application built with React, Tailwind CSS, and the Google Gemini API. This tool is designed to streamline workflows, improve team collaboration, and leverage generative AI for project management tasks.
 
