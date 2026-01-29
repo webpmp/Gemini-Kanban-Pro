@@ -15,7 +15,6 @@ A powerful, AI-enhanced Kanban board application built with React, Tailwind CSS,
 <img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-overview.png" alt="Overview" style="max-width: 50%;"><br>
 - High-level dashboard showing project health, milestones, and documentation links.
 - Team summary and recent status updates.
-<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-kanban.png" alt="Kanban Board" style="max-width: 50%;"><br>
 
 ### Kanban Board
 <img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-kanban.png" alt="Kanban Board" style="max-width: 50%;"><br>
