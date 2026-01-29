@@ -12,17 +12,20 @@ A powerful, AI-enhanced Kanban board application built with React, Tailwind CSS,
 - **AI Project Assistant**: A built-in chat agent that has visibility into your board, team, and deadlines to answer questions and provide summaries.
 
 ### 📊 Project Views
+<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-overview.png" alt="Overview" style="max-width: 50%;">
+- **Project Overview**:
+  - High-level dashboard showing project health, milestones, and documentation links.
+  - Team summary and recent status updates.
+<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-kanban.png" alt="Kanban Board" style="max-width: 50%;">
 - **Kanban Board**:
   - Drag-and-drop interface.
   - Customizable swimlanes (Backlog, Discover, Define, Concept, Design, Implementation).
   - Filter and sort by Priority, Due Date, or Assignee.
+<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-gantt-chart.png" alt="Gantt Chart" style="max-width: 50%;">
 - **Gantt Chart**:
   - Visual timeline for project scheduling.
   - Zoom controls and "Fit to Screen" functionality.
   - Dependency visualization.
-- **Project Overview**:
-  - High-level dashboard showing project health, milestones, and documentation links.
-  - Team summary and recent status updates.
 
 ### 👥 Team & Collaboration
 - **Team Management**: Invite, edit, and remove team members.
