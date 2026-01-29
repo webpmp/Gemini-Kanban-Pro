@@ -6,34 +6,36 @@ A powerful, AI-enhanced Kanban board application built with React, Tailwind CSS,
 
 ## Features
 
-### 🤖 AI-Powered Assistance
+### AI-Powered Assistance
 - **Smart Description Enhancement**: Use Gemini to rewrite and expand task descriptions professionally.
 - **Subtask Generation**: Automatically generate concrete subtasks based on task titles.
 - **AI Project Assistant**: A built-in chat agent that has visibility into your board, team, and deadlines to answer questions and provide summaries.
 
-### 📊 Project Views
+### Project Overview
 <img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-overview.png" alt="Overview" style="max-width: 50%;"><br>
-- **Project Overview**:
-  - High-level dashboard showing project health, milestones, and documentation links.
-  - Team summary and recent status updates.
+- High-level dashboard showing project health, milestones, and documentation links.
+- Team summary and recent status updates.
 <img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-kanban.png" alt="Kanban Board" style="max-width: 50%;"><br>
-- **Kanban Board**:
-  - Drag-and-drop interface.
-  - Customizable swimlanes (Backlog, Discover, Define, Concept, Design, Implementation).
-  - Filter and sort by Priority, Due Date, or Assignee.
-<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-gantt-chart.png" alt="Gantt Chart" style="max-width: 50%;"><br>
-- **Gantt Chart**:
-  - Visual timeline for project scheduling.
-  - Zoom controls and "Fit to Screen" functionality.
-  - Dependency visualization.
 
-### 👥 Team & Collaboration
+### Kanban Board
+<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-kanban.png" alt="Kanban Board" style="max-width: 50%;"><br>
+- Drag-and-drop interface.
+- Customizable swimlanes (Backlog, Discover, Define, Concept, Design, Implementation).
+- Filter and sort by Priority, Due Date, or Assignee.
+
+### Gantt Chart
+<img src="https://github.com/webpmp/webpmp.github.io/blob/master/gk-gantt-chart.png" alt="Gantt Chart" style="max-width: 50%;"><br>
+- Visual timeline for project scheduling.
+- Zoom controls and "Fit to Screen" functionality.
+- Dependency visualization.
+
+### Team & Collaboration
 - **Team Management**: Invite, edit, and remove team members.
 - **Role-Based Access**: Support for Admin, Member, and Viewer roles.
 - **Status Updates**: Post Daily, Weekly, or Ad-hoc updates with rich commenting capabilities.
 - **Discussion**: Per-task comment threads for focused communication.
 
-### 🎨 Customization
+### Customization
 - **Themes**: Choose from multiple color themes (Default, Nature, Sunset, Ocean, Midnight).
 - **Project Identity**: Custom project name, description, and logo/icon.
 
