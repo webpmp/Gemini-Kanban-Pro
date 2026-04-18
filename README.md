@@ -1,4 +1,4 @@
-<img src="https://github.com/webpmp/webpmp.github.io/blob/master/Gemini_Kanban_1980s_Ad.png" alt="Gemini Kanban" style="max-width: 90%;">
+<img src="https://github.com/webpmp/webpmp.github.io/blob/master/Gemini_Kanban.png" alt="Gemini Kanban" style="max-width: 90%;">
 
 # Gemini Kanban
 
